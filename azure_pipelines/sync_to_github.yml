@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: "github azdo sync"
+- group: "github gamal sync"
+
+steps:
+- bash: |
+    mkdir ~/.ssh &&\
+    echo "$(github-azure-devops-sync-ssh-key-private)" > ~/.ssh/id_rsa &&\
+    chmod 400 ~/.ssh/id_rsa &&\
+    echo "$(gamal-repo-ssh-key-private)" > ~/.ssh/id_rsa_gamal &&\
+    chmod 400 ~/.ssh/id_rsa_gamal &&\
+    git config --global user.email "sync_to_github@uumpa-azure" &&\
+    git config --global user.name "sync_to_github" &&\
+    curl -L https://github.com/Uumpa/uumpa-iac/raw/main/azure_pipelines/sync_to_github.py > azure_pipelines/sync_to_github.py &&\
+    python3 azure_pipelines/sync_to_github.py --gamal

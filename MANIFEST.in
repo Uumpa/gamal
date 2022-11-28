@@ -1,0 +1,3 @@
+include gamal/images/*.jpg
+include gamal/images/*.txt
+

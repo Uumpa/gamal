@@ -23,3 +23,7 @@ async def root():
 @app.get("/random_camel_base64")
 async def random_camel_base64():
     return api.random_camel_base64()
+
+@app.get("/translate")
+async def translate(language: str = None):
+    return api.translate(language)

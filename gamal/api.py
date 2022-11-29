@@ -4,6 +4,27 @@ import base64
 from glob import glob
 
 
+TRANSLATIONS = {
+    'english': 'camel',
+    'dutch': 'kameel',
+    'french': 'chameau',
+    'german': 'Kamel',
+    'italian': 'cammello',
+    'portuguese': 'camelo',
+    'spanish': 'camello',
+    'swedish': 'kamelfår',
+    'turkish': 'güvercin',
+    'arabic': 'جمل',
+    'hebrew': 'גמל',
+    'japanese': 'ヤギ',
+    'chinese': '骆驼',
+    'russian': 'верблюд',
+    'korean': '낙타',
+    'thai': 'ม้าน้ำ',
+    'vietnamese': 'con lạc đà',
+    'indonesian': 'kuda'
+}
+
 def random_camel_base64():
     images_path = os.path.join(os.path.dirname(__file__), "images")
     names = [filename.split("/")[-1] for filename in glob(f'{images_path}/*.jpg')]
@@ -38,3 +59,9 @@ def random_camel_html():
         </body>
     </html>
     """
+
+def translate(language = None):
+    return {
+        'translation': TRANSLATIONS.get(language),
+        'languages': list(TRANSLATIONS.keys()),
+    }

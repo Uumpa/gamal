@@ -8,6 +8,7 @@ pool:
 
 variables:
 - group: "uumpa devops"
+- group: "argocd sync"
 
 steps:
 - task: AzureCLI@2
@@ -16,6 +17,9 @@ steps:
     IMAGE_NAME: "$(container_registry_login_server)/gamal"
     IMAGE_TAG: "$(Build.SourceVersion)"
     APPCONFIG: "$(appconfig_name)"
+    ARGOCD_TOKEN: "$(argocd-syncer-user-token)"
+    ARGOCD_DOMAIN: "$(argocd-domain)"
+    ARGOCD_APPLICATION_NAME: gamal
   inputs:
     azureSubscription: 'uumpa service connection'
     scriptType: 'bash'
@@ -29,4 +33,6 @@ steps:
       docker push "${IMAGE_NAME}:${IMAGE_TAG}" &&\
       az appconfig kv set -y --name $APPCONFIG --key gamal-latest-image --value "${IMAGE_NAME}:${IMAGE_TAG}" &&\
       docker tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:latest" &&\
-      docker push "${IMAGE_NAME}:latest"
+      docker push "${IMAGE_NAME}:latest" &&\
+      curl -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
+        "https://${ARGOCD_DOMAIN}/api/v1/applications/${ARGOCD_APPLICATION_NAME}?refresh=true"
